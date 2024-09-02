@@ -7,6 +7,8 @@ const initialState = {
   token: null,
   error: null,
   success: false,
+  nameList: [],
+  reportees: [],
 };
 
 const authSlice = createSlice({
@@ -20,8 +22,10 @@ const authSlice = createSlice({
     });
     builder.addCase(userLogin.fulfilled, (state, action) => {
       state.loading = false;
-      state.token = action.payload.token;
+      state.token = action.payload._token;
       state.user = action.payload.data.user;
+      state.nameList = action.payload.data.nameList;
+      state.reportees = action.payload.data.reportees;
       state.success = true;
     });
     builder.addCase(userLogin.rejected, (state, action) => {
@@ -37,8 +41,10 @@ const authSlice = createSlice({
     });
     builder.addCase(checkUserToken.fulfilled, (state, action) => {
       state.loading = false;
-      state.token = action.payload.token;
-      state.user = action.payload.data.user;
+      state.token = action.payload._token;
+      state.user = action.payload.data;
+      state.nameList = action.payload.data.nameList;
+      state.reportees = action.payload.data.reportees;
       state.success = true;
     });
     builder.addCase(checkUserToken.rejected, (state) => {

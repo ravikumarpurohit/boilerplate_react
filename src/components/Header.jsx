@@ -26,7 +26,7 @@ const Header = ({ isSidebarOpen, toggleSidebar }) => {
 
   return (
     <header className="flex bg-white p-4 shadow-md justify-between">
-      <button onClick={toggleSidebar} className="text-gray-300 focus:outline-none">
+      <button onClick={toggleSidebar} className="text-gray-300 bg-red-500 z-20 focus:outline-none">
         {isSidebarOpen ? (
           <svg className="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 1 1.3 6.326a.91.91 0 0 0 0 1.348L7 13" />
