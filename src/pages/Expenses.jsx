@@ -3,7 +3,12 @@ import Search from "../assets/images/magnifying-glass 1.png";
 import Pencil from "../assets/images/pencil 1.png";
 import Trash from "../assets/images/trash (1) 1.png";
 import { useSelector } from "react-redux";
-import { createExpense, editExpense, getExpenseList } from "../api/expenseApi";
+import {
+  approveExpense,
+  createExpense,
+  editExpense,
+  getExpenseList,
+} from "../api/expenseApi";
 const Expenses = () => {
   const { user, loading, token, nameList, reportees } = useSelector(
     (state) => state.auth
@@ -20,11 +25,15 @@ const Expenses = () => {
     attachments: [],
   };
   const [popupOpen, setPopupOpen] = useState(false);
+  const [approvePopupOpen, setApprovePopupOpen] = useState(false);
   const [expenseFromData, setExpenseFromData] = useState(initExpenseData);
   const [expenseList, setExpenseList] = useState([]);
+  const [attachments, setAttachments] = useState([]);
   const [openMode, setOpenMode] = useState("add");
   const [createdById, setCreatedById] = useState("");
   const [message, setMessage] = useState("");
+  const [status, setStatus] = useState("approved");
+  const [id, setId] = useState("");
 
   const handleGetExpenseList = async () => {
     const response = await getExpenseList(token, createdById);
@@ -50,7 +59,7 @@ const Expenses = () => {
   const handleCreatedByIdChange = (e) => {
     setCreatedById(e.target.value);
   };
-  const handleProductSubmit = async (e) => {
+  const handleExpenseSubmit = async (e) => {
     e.preventDefault();
     if (openMode === "add") {
       const data = new FormData();
@@ -58,8 +67,8 @@ const Expenses = () => {
       data.append("description", expenseFromData.description);
       data.append("date", expenseFromData.date);
       data.append("amount", expenseFromData.amount);
-      for (const file of expenseFromData.attachments) {
-        data.append("attachments", file);
+      for (let i = 0; i < attachments.length; i++) {
+        data.append("attachments", attachments[i]);
       }
       const result = await createExpense(token, data);
       if (!result.error) {
@@ -86,6 +95,23 @@ const Expenses = () => {
       }
     }
   };
+  const handleExpenseStatusChange = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      status: status,
+    };
+
+    const result = await approveExpense(token, id, data);
+    if (!result.error) {
+      handleGetExpenseList();
+      handleApprovePopupClose();
+    } else {
+      result.message
+        ? setMessage(result.message)
+        : setMessage("Unexpected error occurred.");
+    }
+  };
   const handleValueChange = (e) => {
     setExpenseFromData({ ...expenseFromData, [e.target.name]: e.target.value });
   };
@@ -100,6 +126,16 @@ const Expenses = () => {
     setMessage("");
     setExpenseFromData(initExpenseData);
     setPopupOpen(false);
+  };
+  const handleApprovePopupOpen = (id) => {
+    setId(id);
+    setApprovePopupOpen(true);
+  };
+  const handleApprovePopupClose = () => {
+    setMessage("");
+    setId("");
+    setStatus("approved");
+    setApprovePopupOpen(false);
   };
   return (
     <>
@@ -202,7 +238,10 @@ const Expenses = () => {
                   ? new Date(expense.date).toLocaleDateString()
                   : ""}
               </div>
-              <div className=" py-2 px-3 text-lg font-medium text-[#343434]">
+              <div
+                className=" py-2 px-3 text-lg font-medium text-[#343434] cursor-pointer"
+                onClick={() => handleApprovePopupOpen(expense._id)}
+              >
                 {expense.status}
               </div>
               <div className=" py-2 px-3 text-lg font-medium text-[#343434]">
@@ -282,7 +321,7 @@ const Expenses = () => {
                 type="file"
                 id="attachments"
                 name="attachments"
-                onChange={(e) => handleValueChange(e)}
+                onChange={(e) => setAttachments(e.target.files)}
                 className=" col-span-2 bg-[#DCE5FF] rounded-lg py-1 shadow-inner-custom outline-none px-3"
                 accept=".jpg, .jpeg, .png"
                 multiple={true}
@@ -319,18 +358,65 @@ const Expenses = () => {
               {openMode === "add" ? (
                 <button
                   className=" bg-[#3F6FFF] py-1 px-7 rounded-lg text-white font-semibold text-lg"
-                  onClick={(e) => handleProductSubmit(e)}
+                  onClick={(e) => handleExpenseSubmit(e)}
                 >
                   Add
                 </button>
               ) : (
                 <button
                   className=" bg-[#3F6FFF] py-1 px-7 rounded-lg text-white font-semibold text-lg"
-                  onClick={(e) => handleProductSubmit(e)}
+                  onClick={(e) => handleExpenseSubmit(e)}
                 >
                   Save
                 </button>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+      {approvePopupOpen && (
+        <div className=" absolute left-0 top-0 right-0 bottom-0  flex  justify-center items-center bg-black bg-opacity-75">
+          <div className=" bg-white rounded-3xl py-5 px-8">
+            <h1 className=" text-3xl font-semibold text-center mb-6">
+              Change Expense Status
+            </h1>
+            <div className=" py-3 grid grid-cols-3">
+              <label htmlFor="status" className=" pr-5 font-medium">
+                Status:
+              </label>
+              <select
+                type="text"
+                id="status"
+                name="status"
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                className=" col-span-2 bg-[#DCE5FF] rounded-lg py-1 shadow-inner-custom outline-none px-3"
+              >
+                <option value="approved">Approve</option>
+                <option value="disapproved">Disapprove</option>
+              </select>
+            </div>
+
+            {message && (
+              <div className=" my-2 text-base text-red-500 font-medium text-center">
+                {message}
+              </div>
+            )}
+
+            <div className=" flex justify-center gap-6 my-5">
+              <button
+                className=" bg-[#B05454] py-1 px-7 rounded-lg text-white font-semibold text-lg"
+                onClick={handleApprovePopupClose}
+              >
+                Cancel
+              </button>
+
+              <button
+                className=" bg-[#3F6FFF] py-1 px-7 rounded-lg text-white font-semibold text-lg"
+                onClick={(e) => handleExpenseStatusChange(e)}
+              >
+                Save
+              </button>
             </div>
           </div>
         </div>

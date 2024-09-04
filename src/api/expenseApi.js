@@ -6,3 +6,4 @@ export const getExpenseList = (token,id,limit) => api(token).get(`/expense/list?
 
 export const createExpense = (token,data) => api(token).post(`/expense`,data).then(handleResponse).catch(handleError);
 export const editExpense = (token,id,data) => api(token).patch(`/expense/${id}`,data).then(handleResponse).catch(handleError);
+export const approveExpense = (token,id,data) => api(token).patch(`/expense/approve/${id}`,data).then(handleResponse).catch(handleError);
