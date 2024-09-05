@@ -317,7 +317,7 @@ const Sidebar = (props) => {
               </Link>
             )}
           </li>
-          <li>
+          {/* <li>
             {path.pathname === "/track" ? (
               <Link
                 to="/track"
@@ -357,7 +357,7 @@ const Sidebar = (props) => {
                 Track Location
               </Link>
             )}
-          </li>
+          </li> */}
           <li>
             {path.pathname === "/users" ? (
               <Link
@@ -440,7 +440,7 @@ const Sidebar = (props) => {
               </Link>
             )}
           </li>
-          <li>
+          {/* <li>
             {path.pathname === "/chat" ? (
               <Link
                 to="/chat"
@@ -480,7 +480,7 @@ const Sidebar = (props) => {
                 Chat
               </Link>
             )}
-          </li>
+          </li> */}
           {/* Add more sidebar menu items as needed */}
         </ul>
 

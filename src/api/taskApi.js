@@ -6,3 +6,4 @@ export const getTaskList = (token,assigneeId,limit) => api(token).get(`/task/lis
 
 export const createTask = (token,data) => api(token).post(`/task`,data).then(handleResponse).catch(handleError);
 export const editTask = (token,id,data) => api(token).patch(`/task/${id}`,data).then(handleResponse).catch(handleError);
+export const changeTaskStatus = (token,id,data) => api(token).patch(`/task/change-status/${id}`,data).then(handleResponse).catch(handleError);

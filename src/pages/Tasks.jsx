@@ -3,7 +3,12 @@ import Search from "../assets/images/magnifying-glass 1.png";
 import Pencil from "../assets/images/pencil 1.png";
 import Trash from "../assets/images/trash (1) 1.png";
 import { useSelector } from "react-redux";
-import { createTask, editTask, getTaskList } from "../api/taskApi";
+import {
+  changeTaskStatus,
+  createTask,
+  editTask,
+  getTaskList,
+} from "../api/taskApi";
 const Tasks = () => {
   const { user, loading, token, nameList, reportees } = useSelector(
     (state) => state.auth
@@ -19,10 +24,13 @@ const Tasks = () => {
     taskDate: "",
   };
   const [popupOpen, setPopupOpen] = useState(false);
+  const [statusPopupOpen, setStatusPopupOpen] = useState(false);
   const [taskFromData, setTaskFromData] = useState(initTaskData);
   const [taskList, setTaskList] = useState([]);
   const [openMode, setOpenMode] = useState("add");
   const [assigneeId, setAssigneeId] = useState("");
+  const [status, setStatus] = useState("Completed");
+  const [id, setId] = useState("");
   const [message, setMessage] = useState("");
 
   const handleGetTaskList = async () => {
@@ -49,7 +57,7 @@ const Tasks = () => {
   const handleAssigneeIdChange = (e) => {
     setAssigneeId(e.target.value);
   };
-  const handleProductSubmit = async (e) => {
+  const handleTaskSubmit = async (e) => {
     e.preventDefault();
     if (openMode === "add") {
       const result = await createTask(token, taskFromData);
@@ -73,6 +81,19 @@ const Tasks = () => {
       }
     }
   };
+  const handleChangeStatusSubmit = async (e) => {
+    e.preventDefault();
+
+    const result = await changeTaskStatus(token, id, { status: status });
+    if (!result.error) {
+      handleGetTaskList();
+      handleStatusPopupClose();
+    } else {
+      result.message
+        ? setMessage(result.message)
+        : setMessage("Unexpected error occurred.");
+    }
+  };
   const handleValueChange = (e) => {
     setTaskFromData({ ...taskFromData, [e.target.name]: e.target.value });
   };
@@ -87,6 +108,16 @@ const Tasks = () => {
     setMessage("");
     setTaskFromData(initTaskData);
     setPopupOpen(false);
+  };
+  const handleStatusPopupOpen = (id) => {
+    setId(id);
+    setStatusPopupOpen(true);
+  };
+  const handleStatusPopupClose = () => {
+    setMessage("");
+    setId("");
+    setStatus("Completed");
+    setStatusPopupOpen(false);
   };
   return (
     <>
@@ -190,8 +221,35 @@ const Tasks = () => {
               <div className=" py-2 px-3 text-lg font-medium text-[#343434]">
                 {getName(task.createdBy)}
               </div>
-              <div className=" py-2 px-3 text-lg font-medium text-[#343434]">
-                {task.status}
+              <div
+                className="flex gap-1 py-2 px-3 text-lg font-medium text-[#343434] cursor-pointer"
+                onClick={() => handleStatusPopupOpen(task._id)}
+              >
+                {task.status}{" "}
+                <svg
+                  width="20"
+                  height="23"
+                  viewBox="0 0 26 23"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g clip-path="url(#clip0_103_1108)">
+                    <path
+                      d="M23.1837 13.2326L12.6688 22.3023L2.15381 13.2326L4.02021 11.6227L12.6688 19.0826L21.3173 11.6227L23.1837 13.2326Z"
+                      fill="#ADADAD"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_103_1108">
+                      <rect
+                        width="21.7674"
+                        height="25.2359"
+                        fill="white"
+                        transform="matrix(0 -1 1 0 0.0507812 22.3023)"
+                      />
+                    </clipPath>
+                  </defs>
+                </svg>
               </div>
               <div className=" py-2 px-3 text-lg font-medium text-[#343434]">
                 {task.priority}
@@ -331,18 +389,67 @@ const Tasks = () => {
               {openMode === "add" ? (
                 <button
                   className=" bg-[#3F6FFF] py-1 px-7 rounded-lg text-white font-semibold text-lg"
-                  onClick={(e) => handleProductSubmit(e)}
+                  onClick={(e) => handleTaskSubmit(e)}
                 >
                   Add
                 </button>
               ) : (
                 <button
                   className=" bg-[#3F6FFF] py-1 px-7 rounded-lg text-white font-semibold text-lg"
-                  onClick={(e) => handleProductSubmit(e)}
+                  onClick={(e) => handleTaskSubmit(e)}
                 >
                   Save
                 </button>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+      {statusPopupOpen && (
+        <div className=" absolute left-0 top-0 right-0 bottom-0  flex  justify-center items-center bg-black bg-opacity-75">
+          <div className=" bg-white rounded-3xl py-5 px-8">
+            <h1 className=" text-3xl font-semibold text-center mb-6">
+              Add Task Status
+            </h1>
+
+            <div className=" py-3 grid grid-cols-3">
+              <label htmlFor="status" className=" pr-5 font-medium">
+                Status:
+              </label>
+              <select
+                id="status"
+                name="status"
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                className=" col-span-2 bg-[#DCE5FF] rounded-lg py-1 shadow-inner-custom outline-none px-3"
+              >
+                <option value="Pending">Pending</option>
+                <option value="In_Progress">In_Progress</option>
+                <option value="Completed">Completed</option>
+                <option value="ON_Hold">ON_Hold</option>
+              </select>
+            </div>
+
+            {message && (
+              <div className=" my-2 text-base text-red-500 font-medium text-center">
+                {message}
+              </div>
+            )}
+
+            <div className=" flex justify-center gap-6 my-5">
+              <button
+                className=" bg-[#B05454] py-1 px-7 rounded-lg text-white font-semibold text-lg"
+                onClick={handleStatusPopupClose}
+              >
+                Cancel
+              </button>
+
+              <button
+                className=" bg-[#3F6FFF] py-1 px-7 rounded-lg text-white font-semibold text-lg"
+                onClick={(e) => handleChangeStatusSubmit(e)}
+              >
+                Save
+              </button>
             </div>
           </div>
         </div>

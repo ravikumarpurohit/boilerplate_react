@@ -16,13 +16,13 @@ const Users = () => {
     password: "",
     roleName: "Sales",
     parentId: "",
-    address: {},
-    address1: "",
-    address2: "",
-    address3: "",
-    city: "",
-    state: "",
-    country: "",
+    // address: {},
+    // address1: "",
+    // address2: "",
+    // address3: "",
+    // city: "",
+    // state: "",
+    // country: "",
     postcode: "",
     business: [],
   };
@@ -108,32 +108,32 @@ const Users = () => {
         email: userFromData.email,
         mobile: userFromData.mobile,
         gender: userFromData.gender,
-
+        business: selectedBusinessIds,
         roleName: userFromData.roleName,
         parentId: userFromData.parentId,
-        address: {
-          address1: userFromData.address1
-            ? userFromData.address1
-            : userFromData.address.address1,
-          address2: userFromData.address2
-            ? userFromData.address2
-            : userFromData.address.address2,
-          address3: userFromData.address3
-            ? userFromData.address3
-            : userFromData.address.address3,
-          city: userFromData.city
-            ? userFromData.city
-            : userFromData.address.city,
-          state: userFromData.state
-            ? userFromData.state
-            : userFromData.address.state,
-          country: userFromData.country
-            ? userFromData.country
-            : userFromData.address.country,
-          postcode: userFromData.postcode
-            ? userFromData.postcode
-            : userFromData.address.postcode,
-        },
+        // address: {
+        //   address1: userFromData.address1
+        //     ? userFromData.address1
+        //     : userFromData.address.address1,
+        //   address2: userFromData.address2
+        //     ? userFromData.address2
+        //     : userFromData.address.address2,
+        //   address3: userFromData.address3
+        //     ? userFromData.address3
+        //     : userFromData.address.address3,
+        //   city: userFromData.city
+        //     ? userFromData.city
+        //     : userFromData.address.city,
+        //   state: userFromData.state
+        //     ? userFromData.state
+        //     : userFromData.address.state,
+        //   country: userFromData.country
+        //     ? userFromData.country
+        //     : userFromData.address.country,
+        //   postcode: userFromData.postcode
+        //     ? userFromData.postcode
+        //     : userFromData.address.postcode,
+        // },
       };
       const result = await editUser(token, userFromData._id, data);
       if (!result.error) {
@@ -154,6 +154,7 @@ const Users = () => {
     setPopupOpen(true);
     if (data) {
       setUserFromData(data);
+      setSelectedBusinessIds(data.business);
     }
   };
   const handlePopupClose = () => {
@@ -280,6 +281,7 @@ const Users = () => {
                 onChange={(e) => handleValueChange(e)}
                 className=" col-span-2 bg-[#DCE5FF] rounded-lg py-1 shadow-inner-custom outline-none px-3"
               />
+
               <label htmlFor="password" className=" px-5 font-medium">
                 Password:
               </label>
@@ -342,6 +344,7 @@ const Users = () => {
                         id="business"
                         name="business"
                         value={business._id}
+                        checked={selectedBusinessIds.includes(business._id)}
                         onChange={(e) => handleCheckValueChange(e)}
                         className=" bg-[#DCE5FF] rounded-lg py-1 shadow-inner-custom outline-none px-3"
                       />
@@ -354,6 +357,7 @@ const Users = () => {
                     </div>
                   ))}
               </div>
+
               <label htmlFor="gender" className=" px-5 font-medium">
                 Gender:
               </label>
@@ -363,6 +367,7 @@ const Users = () => {
                   id="gender"
                   name="gender"
                   value={"Male"}
+                  checked={userFromData.gender === "Male"}
                   onChange={(e) => handleValueChange(e)}
                   className=" bg-[#DCE5FF]  outline-none"
                 />
@@ -373,18 +378,19 @@ const Users = () => {
                   id="gender"
                   name="gender"
                   value={"Female"}
+                  checked={userFromData.gender === "Female"}
                   onChange={(e) => handleValueChange(e)}
                   className=" bg-[#DCE5FF] outline-none "
                 />
                 <h1>Female</h1>
               </div>
             </div>
-            <div className=" py-3 grid grid-cols-9 ">
+            {/* <div className=" py-3 grid grid-cols-9 ">
               <label htmlFor="address1" className=" pr-3 font-medium">
-                Address 1:
+              Address 1:
               </label>
               <input
-                type="text"
+              type="text"
                 id="address1"
                 name="address1"
                 value={
@@ -394,9 +400,9 @@ const Users = () => {
                 }
                 onChange={(e) => handleValueChange(e)}
                 className=" col-span-2 bg-[#DCE5FF] rounded-lg py-1 shadow-inner-custom outline-none px-3"
-              />
+              /> */}
 
-              <label htmlFor="address2" className=" px-3 font-medium">
+            {/* <label htmlFor="address2" className=" px-3 font-medium">
                 Address 2:
               </label>
               <input
@@ -476,7 +482,7 @@ const Users = () => {
                 onChange={(e) => handleValueChange(e)}
                 className=" col-span-2 bg-[#DCE5FF] rounded-lg py-1 shadow-inner-custom outline-none px-3"
               />
-            </div>
+            </div> */}
 
             {message && (
               <div className=" my-2 text-base text-red-500 font-medium text-center">

@@ -140,7 +140,7 @@ const Expenses = () => {
   return (
     <>
       <div className=" flex justify-between mt-4 mb-4 px-8">
-        <h1 className=" text-[#232323] text-3xl font-medium">Products</h1>
+        <h1 className=" text-[#232323] text-3xl font-medium">Expenses</h1>
         <div className="flex gap-2">
           <div className=" bg-black rounded-full  p-3 flex justify-center items-center">
             <img src={Search} alt="no image" className=" h-4 w-4 " />
@@ -239,10 +239,34 @@ const Expenses = () => {
                   : ""}
               </div>
               <div
-                className=" py-2 px-3 text-lg font-medium text-[#343434] cursor-pointer"
+                className="flex gap-1 py-2 px-3 text-lg font-medium text-[#343434] cursor-pointer"
                 onClick={() => handleApprovePopupOpen(expense._id)}
               >
                 {expense.status}
+                <svg
+                  width="20"
+                  height="23"
+                  viewBox="0 0 26 23"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g clip-path="url(#clip0_103_1108)">
+                    <path
+                      d="M23.1837 13.2326L12.6688 22.3023L2.15381 13.2326L4.02021 11.6227L12.6688 19.0826L21.3173 11.6227L23.1837 13.2326Z"
+                      fill="#ADADAD"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_103_1108">
+                      <rect
+                        width="21.7674"
+                        height="25.2359"
+                        fill="white"
+                        transform="matrix(0 -1 1 0 0.0507812 22.3023)"
+                      />
+                    </clipPath>
+                  </defs>
+                </svg>
               </div>
               <div className=" py-2 px-3 text-lg font-medium text-[#343434]">
                 {getName(expense.createdBy)}
