@@ -39,7 +39,7 @@ const Products = () => {
   const handleProductSubmit = async (e) => {
     e.preventDefault();
     if (openMode === "add") {
-      setProductFromData({ ...productFromData, businessId: businessId });
+      productFromData.businessId=businessId;
       const result = await createProduct(token, productFromData);
       if (!result.error) {
         handleGetProductList();

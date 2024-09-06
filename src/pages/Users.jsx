@@ -32,6 +32,7 @@ const Users = () => {
   const [businessList, setBusinessList] = useState([]);
   const [openMode, setOpenMode] = useState("add");
   const [message, setMessage] = useState("");
+  const [listMessage, setListMessage] = useState("");
   const [selectedBusinessIds, setSelectedBusinessIds] = useState([]);
 
   const handleCheckValueChange = (e) => {
@@ -46,14 +47,22 @@ const Users = () => {
 
   const handleGetUserList = async () => {
     const response = await getUserList(token);
-    if (response) {
+    if (!response.error) {
       setUserList(response.data.userList);
+    } else {
+      response.message
+        ? setListMessage(response.message)
+        : setListMessage("Unexpected error occurred.");
     }
   };
   const handleGetBusinessList = async () => {
     const response = await getBusinessList(token);
-    if (response) {
+    if (!response.error) {
       setBusinessList(response.data.businessList);
+    } else {
+      response.message
+        ? setListMessage(response.message)
+        : setListMessage("Unexpected error occurred.");
     }
   };
   useEffect(() => {
@@ -201,8 +210,12 @@ const Users = () => {
           <div className=" px-3 py-2 text-lg font-semibold text-[#BAC0D1]">
             Actions
           </div>
-        </div>
-        {userList.length > 0 &&
+        </div>{
+          listMessage && (
+            <div className=" mt-10 text-2xl text-red-500 text-center">{listMessage}</div>
+          )
+        }
+        {!listMessage && userList.length > 0 &&
           userList.map((user) => (
             <div className=" grid grid-cols-9 bg-white" key={user._id}>
               <div className=" py-2 pl-8 pr-3 text-lg font-medium text-[#343434] col-span-2 whitespace-nowrap overflow-clip text-ellipsis">

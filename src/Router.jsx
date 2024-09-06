@@ -12,6 +12,7 @@ import Users from "./pages/Users";
 import Customers from "./pages/Customers";
 import Chat from "./pages/Chat";
 import TrackLocations from "./pages/TrackLocations";
+import Quotations from "./pages/quotations";
 
 const Router = createBrowserRouter([
   {
@@ -31,6 +32,11 @@ const Router = createBrowserRouter([
       {
         path: "inquiries",
         element: <Inquiries />,
+        // loader: teamLoader,
+      },
+      {
+        path: "quotations/:orderId",
+        element: <Quotations />,
         // loader: teamLoader,
       },
       {

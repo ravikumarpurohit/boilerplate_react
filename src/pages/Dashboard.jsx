@@ -3,13 +3,13 @@ import DashboardLogo from "../assets/images/chemistry 1.png";
 import { setBusinessId } from "../redux/slices/businessStoreSlices";
 
 const Dashboard = () => {
-  const { user } = useSelector((state) => state.auth);
-  const { businessId } = useSelector((state) => state.business);
-  const dispatch = useDispatch();
-  console.log(" user in dashboard ", user);
-  const handleBusinessIdChange = (e) => {
-    dispatch(setBusinessId(e.target.value));
-  };
+  // const { user } = useSelector((state) => state.auth);
+  // const { businessId } = useSelector((state) => state.business);
+  // const dispatch = useDispatch();
+  // console.log(" user in dashboard ", user);
+  // const handleBusinessIdChange = (e) => {
+  //   dispatch(setBusinessId(e.target.value));
+  // };
   return (
     <>
       <div className=" flex justify-between items-center mt-4 mb-4 px-8">
@@ -22,7 +22,7 @@ const Dashboard = () => {
             </h1>
           </div>
         </div>
-        <div className=" relative flex gap-2">
+        {/* <div className=" relative flex gap-2">
           <select
             name="businessId"
             id=""
@@ -62,14 +62,14 @@ const Dashboard = () => {
                 </clipPath>
               </defs>
             </svg>
-          </div>
-          {/* <button
+          </div> */}
+        {/* <button
             className=" text-white font-semibold bg-[#3F6FFF] rounded-l-full rounded-r-full px-5 py-1 text-lg "
             // onClick={handlePopupOpen}
           >
             Add Product
           </button> */}
-        </div>
+        {/* </div> */}
       </div>
     </>
   );
