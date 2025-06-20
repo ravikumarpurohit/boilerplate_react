@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+
+
+/* dark -- #096B68   --- use in border
+light -- #129990   ---- use like main color
+extra light --- bg-opacity-85  --- use in hover */
