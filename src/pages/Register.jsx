@@ -52,11 +52,13 @@ const Register = () => {
       newErrors.email = "Please enter a valid email address";
     }
 
-    // if (!userData.password) {
-    //   newErrors.password = "Password is required";
-    // } else if (!passwordRegex.test(userData.password)) {
-    //   newErrors.password = "Password must be at least 8 characters with at least one letter and one number";
-    // }
+    // trial :
+
+    // newErrors.email = !userData.email.trim()
+    //   ? "Email is required"
+    //   : !emailRegex.test(userData.email)
+    //   ? "minimum 2 char required "
+    //   : "";
 
     if (!userData.mobile.trim()) {
       newErrors.mobile = "Mobile number is required";
@@ -78,18 +80,34 @@ const Register = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setUserData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
 
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
+    if (
+      [
+        "address1",
+        "address2",
+        "address3",
+        "city",
+        "country",
+        "postcode",
+      ].includes(name)
+    ) {
+      setUserData((prev) => ({
+        ...prev,
+        address: {
+          ...prev.address,
+          [name]: value,
+        },
+      }));
+    } else if (type === "checkbox") {
+      setUserData((prev) => ({
+        ...prev,
+        [name]: checked,
+      }));
+    } else {
+      setUserData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
     }
   };
 
@@ -106,9 +124,13 @@ const Register = () => {
     try {
       const response = await signUp(userData);
       console.log("✅ Registered:", response);
-      navigate("/login");
+      if (response.status === 201) {
+        navigate("/login");
+      } else {
+        alert(`Unexpected response: ${JSON.stringify(response.message)}`);
+      }
     } catch (error) {
-      console.error("❌ Registration failed:", error);
+      console.log("Registration failed:", error);
 
       // Handle server-side errors
       if (error.response?.data?.errors) {
@@ -125,7 +147,7 @@ const Register = () => {
     <div className=" from-gray-100  flex  px-4">
       <div className=" p-10  w-full max-w-3xl">
         <form
-          onSubmit={handleSubmit}
+          onSubmit={(e) => handleSubmit(e)}
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
         >
           {/* First Name */}

@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { checkUserToken } from "../redux/actions/authActions";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
+import { Outlet } from "react-router-dom";
 
 const Layout = () => {
   const { user, loading } = useSelector((state) => state.auth);
@@ -11,32 +12,44 @@ const Layout = () => {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  // useEffect(() => {
-  //   console.log(`user data ${JSON.stringify(user)}`);
-  //   if (!user && !loading) {
-  //     navigate("/login");
-  //   }
-  // }, [navigate, user]);
+  useEffect(() => {
+    if (user) {
+      const token = localStorage.getItem("userToken");
+      const parsedToken = JSON.parse(token);
+      console.log(parsedToken);
+      if (parsedToken) {
+        dispatch(checkUserToken(token));
+      } else {
+        navigate("/login");
+      }
+    }
+  }, [dispatch, navigate, user]);
 
-  // if (!user && !loading) {
-  //   const token = localStorage.getItem("userToken") ? localStorage.getItem("userToken") : null;
-  //   if (token) {
-  //     dispatch(checkUserToken(token));
-  //   } else {
-  //     navigate("/login");
-  //   }
-  // }
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
       <Sidebar sidebarOpen={isSidebarOpen} />
 
       {/* Main Content */}
-      <main className={`flex-1 p-2 ${isSidebarOpen ? "ml-0" : "-ml-50"} transition-margin duration-300 ease-in-out`}>
+      <main
+        className={`flex-1 p-2 ${
+          isSidebarOpen ? "ml-0" : "-ml-50"
+        } transition-margin duration-300 ease-in-out`}
+      >
         {/* Header */}
         <Header sidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 

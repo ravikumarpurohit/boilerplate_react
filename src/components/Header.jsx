@@ -20,7 +20,8 @@ const Header = ({ isSidebarOpen, toggleSidebar }) => {
   };
 
   const logout = () => {
-    console.log("xddfds");
+    alert("Are u Sure u want to logout?");
+    console.log("logged out successfully");
     localStorage.removeItem("userToken");
     dispatch(userLogout(null));
     navigate("/login");
@@ -38,7 +39,9 @@ const Header = ({ isSidebarOpen, toggleSidebar }) => {
       {/* User Profile */}
       <div className="space-x-4">
         {/* Profile Image with Dropdown */}
-        <button className="">login</button>
+        <button className="" onClick={logout}>
+          Logout
+        </button>
         <button>Register</button>
         <div className="relative group">
           <button

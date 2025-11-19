@@ -10,21 +10,18 @@ const Router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: "/",
+        path: "dashboard",
         element: <Dashboard />,
-        // loader: teamLoader,
-      },
-      {
-        path: "login",
-        element: <Login />,
-        // loader: teamLoader,
-      },
-      {
-        path: "register",
-        element: <Register />,
-        // loader: teamLoader,
       },
     ],
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
   },
 ]);
 

@@ -33,7 +33,9 @@ const authSlice = createSlice({
     });
     builder.addCase(checkUserToken.pending, (state) => {
       state.loading = true;
-      state.error = false;
+      // state.error = false;
+      state.error = null;
+      state.success = false;
     });
     builder.addCase(checkUserToken.fulfilled, (state, action) => {
       state.loading = false;
